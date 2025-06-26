@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>ARIA-Selected 조합 테스트</title>
+  <style>
+    .tab { margin-bottom: 1rem; }
+    .tab__link, .link_menu {
+      display: inline-block;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      margin: 4px;
+      cursor: pointer;
+    }
+    .tab__link[aria-selected="true"],
+    .link_menu[aria-selected="true"] {
+      background-color: #007BFF;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>ARIA-Selected 속성 테스트</h1>
+
+  <!-- 1. a 태그 + role="tab" -->
+  <div class="tab">
+    <a href="#none" class="link_menu" role="tab" aria-selected="true">언론사</a>
+    <a href="#none" class="link_menu" role="tab" aria-selected="false">언론사</a>
+  </div>
+
+  <!-- 2. a 태그 + role 없음 -->
+  <div class="tab">
+    <a href="#none" class="link_menu" aria-selected="true">언론사 (role 없음)</a>
+    <a href="#none" class="link_menu" aria-selected="false">언론사 (role 없음)</a>
+  </div>
+
+  <!-- 3. button 태그 + role="tab" -->
+  <div class="tab">
+    <button type="button" class="tab__link" role="tab" aria-selected="true">당일배송</button>
+    <button type="button" class="tab__link" role="tab" aria-selected="false">당일배송</button>
+  </div>
+
+  <!-- 4. button 태그 + role 없음 -->
+  <div class="tab">
+    <button type="button" class="tab__link" aria-selected="true">당일배송 (role 없음)</button>
+    <button type="button" class="tab__link" aria-selected="false">당일배송 (role 없음)</button>
+  </div>
+  <script>
+    document.querySelectorAll('.tab').forEach(tabGroup => {
+    tabGroup.addEventListener('click', function (e) {
+    const target = e.target.closest('[aria-selected]');
+    if (!target) return;
+
+    // 그룹 내의 모든 요소 aria-selected false로
+    tabGroup.querySelectorAll('[aria-selected]').forEach(el => {
+      el.setAttribute('aria-selected', 'false');
+    });
+
+    // 클릭한 요소만 true로
+    target.setAttribute('aria-selected', 'true');
+    });
+    });
+  </script>
+</body>
+</html>
