@@ -42,75 +42,48 @@
         <li><a href="1.html">표 테스트</a></li>
     </ul>
 
-  <h1>UL/LI 탭리스트 구조</h1>
+    <h1>UL/LI 구조 ARIA-Selected 비교</h1>
 
-  <!-- 탭리스트 -->
-  <ul class="tablist" role="tablist" aria-label="배송 방식 선택">
-    <li>
-      <button
-        class="tab-button"
-        role="tab"
-        aria-selected="true"
-        
-        id="tab1"
-      >
-        당일배송
-      </button>
-      <!-- aria-controls="panel1" -->
-    </li>
-    <li>
-      <button
-        class="tab-button"
-        role="tab"
-        aria-selected="false"
-        
-        id="tab2"
-      >
-        정기배송
-      </button>
-      <!-- aria-controls="panel2" -->
-    </li>
-  </ul>
+    <!-- 1. a 태그 + role="tab" -->
+    <ul role="tablist" aria-label="a 태그 + role 포함">
+    <li><a href="#none" class="link_menu" role="tab" aria-selected="true">언론사</a></li>
+    <li><a href="#none" class="link_menu" role="tab" aria-selected="false">언론사</a></li>
+    </ul>
 
-  <!-- 탭 콘텐츠 -->
-  <div
-    id="panel1"
-    class="tabpanel"
-    role="tabpanel"
-    aria-labelledby="tab1"
-    aria-hidden="false"
-  >
-    <p>당일배송 콘텐츠입니다.</p>
-  </div>
-  <div
-    id="panel2"
-    class="tabpanel"
-    role="tabpanel"
-    aria-labelledby="tab2"
-    aria-hidden="true"
-  >
-    <p>정기배송 콘텐츠입니다.</p>
-  </div>
+    <!-- 2. a 태그 + role 없음 -->
+    <ul aria-label="a 태그 + role 없음">
+    <li><a href="#none" class="link_menu" aria-selected="true">언론사 (role 없음)</a></li>
+    <li><a href="#none" class="link_menu" aria-selected="false">언론사 (role 없음)</a></li>
+    </ul>
 
-  <script>
-    const tabs = document.querySelectorAll('[role="tab"]');
-    const panels = document.querySelectorAll('[role="tabpanel"]');
+    <!-- 3. button 태그 + role="tab" -->
+    <ul role="tablist" aria-label="button 태그 + role 포함">
+    <li><button type="button" class="tab__link" role="tab" aria-selected="true">당일배송</button></li>
+    <li><button type="button" class="tab__link" role="tab" aria-selected="false">당일배송</button></li>
+    </ul>
 
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => {
-          t.setAttribute('aria-selected', 'false');
-        });
-        panels.forEach(p => {
-          p.setAttribute('aria-hidden', 'true');
+    <!-- 4. button 태그 + role 없음 -->
+    <ul aria-label="button 태그 + role 없음">
+    <li><button type="button" class="tab__link" aria-selected="true">당일배송 (role 없음)</button></li>
+    <li><button type="button" class="tab__link" aria-selected="false">당일배송 (role 없음)</button></li>
+    </ul>
+
+    <script>
+    document.querySelectorAll('ul').forEach(tabGroup => {
+        tabGroup.addEventListener('click', function (e) {
+        const target = e.target.closest('[aria-selected]');
+        if (!target) return;
+
+        // 그룹 내의 모든 요소 aria-selected false로
+        tabGroup.querySelectorAll('[aria-selected]').forEach(el => {
+            el.setAttribute('aria-selected', 'false');
         });
 
-        tab.setAttribute('aria-selected', 'true');
-        const panel = document.getElementById(tab.getAttribute('aria-controls'));
-        panel.setAttribute('aria-hidden', 'false');
-      });
+        // 클릭한 요소만 true로
+        target.setAttribute('aria-selected', 'true');
+        });
     });
-  </script>
+    </script>
 
 </body>
 </html>
