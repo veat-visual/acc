@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>aria-activedescendant 테스트</title>
+  <title>aria-activedescendant 확장/축소 테스트</title>
   <style>
     body {
       font-family: sans-serif;
@@ -13,74 +13,94 @@
       display: block;
       font-weight: bold;
       margin-bottom: 0.5em;
-      font-size: 1.2em;
     }
     .combo-input {
       background-color: #f5f5f5;
       border: 2px solid rgb(0 0 0 / 75%);
       border-radius: 4px;
-      font-size: 1em;
       padding: 12px 16px;
       width: 100%;
       max-width: 400px;
     }
     .combo-menu {
+      display: none;
       background-color: #f5f5f5;
       border: 1px solid rgb(0 0 0 / 75%);
-      border-radius: 0 0 4px 4px;
+      border-radius: 4px;
       margin-top: 4px;
       max-width: 400px;
     }
     .combo-option {
-      padding: 10px 12px;
-    }
-    .combo-option.active {
-      outline: 2px solid #0067b8;
+      padding: 10px;
     }
   </style>
 </head>
 <body>
 
-  <a href="index.html">홈</a>
-
-  <label id="combo1-label" for="combo1" class="combo-label">Favorite Fruit (aria-activedescendant)</label>
-  <div id="combo1" class="combo-input" role="combobox" aria-haspopup="listbox" aria-expanded="true" aria-controls="listbox1" aria-activedescendant="option-0" tabindex="0">
+  <label id="combo1-label" for="combo1" class="combo-label">Favorite Fruit (확장/축소)</label>
+  <div id="combo1"
+       class="combo-input"
+       role="combobox"
+       aria-haspopup="listbox"
+       aria-expanded="false"
+       aria-controls="listbox1"
+       aria-activedescendant=""
+       tabindex="0">
     Choose a Fruit
   </div>
 
-  <div id="listbox1" class="combo-menu" role="listbox" aria-labelledby="combo1-label">
-    <div id="option-0" role="option" class="combo-option">Apple</div>
-    <div id="option-1" role="option" class="combo-option">Banana</div>
-    <div id="option-2" role="option" class="combo-option">Cherry</div>
+  <div id="listbox1" role="listbox" class="combo-menu" aria-labelledby="combo1-label">
+    <div id="option-0" role="option">Apple</div>
+    <div id="option-1" role="option">Banana</div>
+    <div id="option-2" role="option">Cherry</div>
   </div>
 
   <script>
     const combo = document.getElementById('combo1');
-    const options = document.querySelectorAll('.combo-option');
+    const listbox = document.getElementById('listbox1');
+    const options = document.querySelectorAll('[role=option]');
     let currentIndex = 0;
 
-    function updateActiveDescendant(index) {
-      combo.setAttribute('aria-activedescendant', `option-${index}`);
-      options.forEach((opt, i) => {
-        opt.classList.toggle('active', i === index);
-      });
+    function toggleListbox(open) {
+      combo.setAttribute('aria-expanded', open ? 'true' : 'false');
+      listbox.style.display = open ? 'block' : 'none';
     }
 
+    function updateActiveDescendant(index) {
+      combo.setAttribute('aria-activedescendant', options[index].id);
+      combo.textContent = options[index].textContent;
+    }
+
+    combo.addEventListener('click', () => {
+      const expanded = combo.getAttribute('aria-expanded') === 'true';
+      toggleListbox(!expanded);
+    });
+
     combo.addEventListener('keydown', (e) => {
+      const expanded = combo.getAttribute('aria-expanded') === 'true';
       if (e.key === 'ArrowDown') {
-        currentIndex = Math.min(currentIndex + 1, options.length - 1);
-        updateActiveDescendant(currentIndex);
+        if (!expanded) {
+          toggleListbox(true);
+        } else {
+          currentIndex = Math.min(currentIndex + 1, options.length - 1);
+          updateActiveDescendant(currentIndex);
+        }
         e.preventDefault();
       } else if (e.key === 'ArrowUp') {
-        currentIndex = Math.max(currentIndex - 1, 0);
-        updateActiveDescendant(currentIndex);
+        if (!expanded) {
+          toggleListbox(true);
+        } else {
+          currentIndex = Math.max(currentIndex - 1, 0);
+          updateActiveDescendant(currentIndex);
+        }
+        e.preventDefault();
+      } else if (e.key === 'Escape') {
+        toggleListbox(false);
         e.preventDefault();
       }
     });
-
-    // 초기 active 상태 설정
-    updateActiveDescendant(currentIndex);
   </script>
+  <h6>v1.1_260</h6>
 
 </body>
 </html>
