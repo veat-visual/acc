@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>aria-activedescendant 테스트</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+    }
+    .combo-label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      font-size: 1.2em;
+    }
+    .combo-input {
+      background-color: #f5f5f5;
+      border: 2px solid rgb(0 0 0 / 75%);
+      border-radius: 4px;
+      font-size: 1em;
+      padding: 12px 16px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .combo-menu {
+      background-color: #f5f5f5;
+      border: 1px solid rgb(0 0 0 / 75%);
+      border-radius: 0 0 4px 4px;
+      margin-top: 4px;
+      max-width: 400px;
+    }
+    .combo-option {
+      padding: 10px 12px;
+    }
+    .combo-option.active {
+      outline: 2px solid #0067b8;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="index.html">홈</a>
+
+  <label id="combo1-label" for="combo1" class="combo-label">Favorite Fruit (aria-activedescendant)</label>
+  <div id="combo1" class="combo-input" role="combobox" aria-haspopup="listbox" aria-expanded="true" aria-controls="listbox1" aria-activedescendant="option-0" tabindex="0">
+    Choose a Fruit
+  </div>
+
+  <div id="listbox1" class="combo-menu" role="listbox" aria-labelledby="combo1-label">
+    <div id="option-0" role="option" class="combo-option">Apple</div>
+    <div id="option-1" role="option" class="combo-option">Banana</div>
+    <div id="option-2" role="option" class="combo-option">Cherry</div>
+  </div>
+
+  <script>
+    const combo = document.getElementById('combo1');
+    const options = document.querySelectorAll('.combo-option');
+    let currentIndex = 0;
+
+    function updateActiveDescendant(index) {
+      combo.setAttribute('aria-activedescendant', `option-${index}`);
+      options.forEach((opt, i) => {
+        opt.classList.toggle('active', i === index);
+      });
+    }
+
+    combo.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        currentIndex = Math.min(currentIndex + 1, options.length - 1);
+        updateActiveDescendant(currentIndex);
+        e.preventDefault();
+      } else if (e.key === 'ArrowUp') {
+        currentIndex = Math.max(currentIndex - 1, 0);
+        updateActiveDescendant(currentIndex);
+        e.preventDefault();
+      }
+    });
+
+    // 초기 active 상태 설정
+    updateActiveDescendant(currentIndex);
+  </script>
+
+</body>
+</html>
