@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>iOS VoiceOver 탭 테스트</title>
+  <title>탭리스트 구조 예제 (ul-li-tab)</title>
   <style>
-    .tabs {
+    ul.tablist {
+      list-style: none;
+      padding: 0;
       display: flex;
-      flex-direction: row;
       gap: 8px;
     }
 
@@ -41,31 +42,35 @@
         <li><a href="1.html">표 테스트</a></li>
     </ul>
 
-  <h1>VoiceOver 탭 인터페이스 예제</h1>
+  <h1>UL/LI 탭리스트 구조</h1>
 
-  <!-- 탭 리스트 -->
-  <div class="tabs" role="tablist" aria-label="콘텐츠 카테고리">
-    <button
-      class="tab-button"
-      role="tab"
-      aria-selected="true"
-      aria-controls="panel1"
-      id="tab1"
-    >
-      당일배송
-    </button>
-    <button
-      class="tab-button"
-      role="tab"
-      aria-selected="false"
-      aria-controls="panel2"
-      id="tab2"
-    >
-      정기배송
-    </button>
-  </div>
+  <!-- 탭리스트 -->
+  <ul class="tablist" role="tablist" aria-label="배송 방식 선택">
+    <li>
+      <button
+        class="tab-button"
+        role="tab"
+        aria-selected="true"
+        aria-controls="panel1"
+        id="tab1"
+      >
+        당일배송
+      </button>
+    </li>
+    <li>
+      <button
+        class="tab-button"
+        role="tab"
+        aria-selected="false"
+        aria-controls="panel2"
+        id="tab2"
+      >
+        정기배송
+      </button>
+    </li>
+  </ul>
 
-  <!-- 탭 패널 -->
+  <!-- 탭 콘텐츠 -->
   <div
     id="panel1"
     class="tabpanel"
@@ -107,4 +112,3 @@
 
 </body>
 </html>
-
