@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iOS VoiceOver 탭 테스트</title>
+  <style>
+    .tabs {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+    }
+
+    .tab-button {
+      padding: 10px 16px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+    }
+
+    .tab-button[aria-selected="true"] {
+      background: #007BFF;
+      color: white;
+    }
+
+    .tabpanel {
+      margin-top: 1rem;
+      padding: 10px;
+      border: 1px solid #ccc;
+      display: none;
+    }
+
+    .tabpanel[aria-hidden="false"] {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+    <a href="index.html">홈</a>
+    <ul>
+        <li><a href="1.html">표 테스트</a></li>
+    </ul>
+
+  <h1>VoiceOver 탭 인터페이스 예제</h1>
+
+  <!-- 탭 리스트 -->
+  <div class="tabs" role="tablist" aria-label="콘텐츠 카테고리">
+    <button
+      class="tab-button"
+      role="tab"
+      aria-selected="true"
+      aria-controls="panel1"
+      id="tab1"
+    >
+      당일배송
+    </button>
+    <button
+      class="tab-button"
+      role="tab"
+      aria-selected="false"
+      aria-controls="panel2"
+      id="tab2"
+    >
+      정기배송
+    </button>
+  </div>
+
+  <!-- 탭 패널 -->
+  <div
+    id="panel1"
+    class="tabpanel"
+    role="tabpanel"
+    aria-labelledby="tab1"
+    aria-hidden="false"
+  >
+    <p>당일배송 콘텐츠입니다.</p>
+  </div>
+  <div
+    id="panel2"
+    class="tabpanel"
+    role="tabpanel"
+    aria-labelledby="tab2"
+    aria-hidden="true"
+  >
+    <p>정기배송 콘텐츠입니다.</p>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('[role="tab"]');
+    const panels = document.querySelectorAll('[role="tabpanel"]');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.setAttribute('aria-selected', 'false');
+        });
+        panels.forEach(p => {
+          p.setAttribute('aria-hidden', 'true');
+        });
+
+        tab.setAttribute('aria-selected', 'true');
+        const panel = document.getElementById(tab.getAttribute('aria-controls'));
+        panel.setAttribute('aria-hidden', 'false');
+      });
+    });
+  </script>
+
+</body>
+</html>
+
