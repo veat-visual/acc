@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aria-controls 비교 탭 예제</title>
+  <style>
+    ul.tablist {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+
+    ul.tablist li {
+      display: inline-block;
+    }
+
+    .tab-button {
+      padding: 10px 16px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .tab-button[aria-selected="true"] {
+      background-color: #007BFF;
+      color: white;
+    }
+
+    .tabpanel {
+      display: none;
+      margin-top: 1rem;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    .tabpanel.active,
+    .tabpanel[aria-hidden="false"] {
+      display: block;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>aria-controls 사용 여부 비교 탭 예제</h1>
+
+  <!-- ✅ 예제 1: aria-controls 사용 -->
+  <h2>예제 1: <code>aria-controls</code> 사용</h2>
+  <ul class="tablist" role="tablist" aria-label="aria-controls 예제">
+    <li>
+      <button class="tab-button"
+              role="tab"
+              id="aria-tab1"
+              aria-controls="aria-panel1"
+              aria-selected="true">
+        탭 1
+      </button>
+    </li>
+    <li>
+      <button class="tab-button"
+              role="tab"
+              id="aria-tab2"
+              aria-controls="aria-panel2"
+              aria-selected="false">
+        탭 2
+      </button>
+    </li>
+  </ul>
+
+  <div id="aria-panel1" class="tabpanel" role="tabpanel" aria-labelledby="aria-tab1" aria-hidden="false">
+    <p>이 콘텐츠는 <strong>aria-controls</strong>가 연결된 탭 1의 콘텐츠입니다.</p>
+  </div>
+  <div id="aria-panel2" class="tabpanel" role="tabpanel" aria-labelledby="aria-tab2" aria-hidden="true">
+    <p>이 콘텐츠는 <strong>aria-controls</strong>가 연결된 탭 2의 콘텐츠입니다.</p>
+  </div>
+
+  <!-- ✅ 예제 2: aria-controls 없이 data-target 사용 -->
+  <h2>예제 2: <code>aria-controls</code> 없이 <code>data-target</code> 사용</h2>
+  <ul class="tablist" aria-label="data-target 예제">
+    <li>
+      <button class="tab-button"
+              data-target="#custom-panel1"
+              aria-selected="true">
+        탭 A
+      </button>
+    </li>
+    <li>
+      <button class="tab-button"
+              data-target="#custom-panel2"
+              aria-selected="false">
+        탭 B
+      </button>
+    </li>
+  </ul>
+
+  <div id="custom-panel1" class="tabpanel active">
+    <p>이 콘텐츠는 <strong>aria-controls 없이</strong> data-target으로 연결된 탭 A의 콘텐츠입니다.</p>
+  </div>
+  <div id="custom-panel2" class="tabpanel">
+    <p>이 콘텐츠는 <strong>aria-controls 없이</strong> data-target으로 연결된 탭 B의 콘텐츠입니다.</p>
+  </div>
+
+  <script>
+    // ✅ 예제 1: aria-controls 기반
+    const ariaTabs = document.querySelectorAll('[role="tab"]');
+    const ariaPanels = document.querySelectorAll('[role="tabpanel"]');
+
+    ariaTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const group = tab.closest('ul');
+        const controls = tab.getAttribute('aria-controls');
+
+        group.querySelectorAll('[role="tab"]').forEach(t => t.setAttribute('aria-selected', 'false'));
+        ariaPanels.forEach(p => p.setAttribute('aria-hidden', 'true'));
+
+        tab.setAttribute('aria-selected', 'true');
+        document.getElementById(controls).setAttribute('aria-hidden', 'false');
+      });
+    });
+
+    // ✅ 예제 2: data-target 기반
+    document.querySelectorAll('ul[aria-label="data-target 예제"]').forEach(tabGroup => {
+      tabGroup.addEventListener('click', function (e) {
+        const target = e.target.closest('[data-target]');
+        if (!target) return;
+
+        const targetId = target.getAttribute('data-target');
+        const panelGroup = tabGroup.nextElementSibling.parentElement.querySelectorAll('.tabpanel');
+
+        tabGroup.querySelectorAll('[aria-selected]').forEach(el => el.setAttribute('aria-selected', 'false'));
+        panelGroup.forEach(p => p.classList.remove('active'));
+
+        target.setAttribute('aria-selected', 'true');
+        const content = document.querySelector(targetId);
+        if (content) content.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
