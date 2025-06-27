@@ -3,87 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>탭리스트 구조 예제 (ul-li-tab)</title>
+  <title>UL/LI 기반 탭리스트 구조</title>
   <style>
     ul.tablist {
       list-style: none;
       padding: 0;
       display: flex;
       gap: 8px;
+      margin-bottom: 1rem;
     }
 
-    .tab-button {
+    ul.tablist li {
+      display: inline-block;
+    }
+
+    .tab-button, .link_menu {
       padding: 10px 16px;
       border: 1px solid #ccc;
       background: white;
       cursor: pointer;
+      border-radius: 6px;
+      text-decoration: none;
+      color: black;
+      font-size: 1rem;
     }
 
-    .tab-button[aria-selected="true"] {
-      background: #007BFF;
+    .tab-button[aria-selected="true"],
+    .link_menu[aria-selected="true"] {
+      background-color: #007BFF;
       color: white;
-    }
-
-    .tabpanel {
-      margin-top: 1rem;
-      padding: 10px;
-      border: 1px solid #ccc;
-      display: none;
-    }
-
-    .tabpanel[aria-hidden="false"] {
-      display: block;
     }
   </style>
 </head>
 <body>
-    <a href="index.html">홈</a>
-    <ul>
-        <li><a href="1.html">표 테스트</a></li>
-    </ul>
 
-    <h1>UL/LI 구조 ARIA-Selected 비교</h1>
+  <a href="index.html">홈</a>
+  <ul>
+    <li><a href="1.html">표 테스트</a></li>
+  </ul>
 
-    <!-- 1. a 태그 + role="tab" -->
-    <ul role="tablist" aria-label="a 태그 + role 포함">
-    <li><a href="#none" class="link_menu" role="tab" aria-selected="true">언론사</a></li>
-    <li><a href="#none" class="link_menu" role="tab" aria-selected="false">언론사</a></li>
-    </ul>
+  <h1>UL/LI 구조 ARIA-Selected 비교</h1>
 
-    <!-- 2. a 태그 + role 없음 -->
-    <ul aria-label="a 태그 + role 없음">
-    <li><a href="#none" class="link_menu" aria-selected="true">언론사 (role 없음)</a></li>
-    <li><a href="#none" class="link_menu" aria-selected="false">언론사 (role 없음)</a></li>
-    </ul>
+  <!-- 1. a 태그 + role="tab" -->
+  <ul class="tablist" role="tablist" aria-label="a 태그 + role 포함">
+    <li><a href="#none" class="tab-button" role="tab" aria-selected="true">언론사</a></li>
+    <li><a href="#none" class="tab-button" role="tab" aria-selected="false">언론사</a></li>
+  </ul>
 
-    <!-- 3. button 태그 + role="tab" -->
-    <ul role="tablist" aria-label="button 태그 + role 포함">
-    <li><button type="button" class="tab__link" role="tab" aria-selected="true">당일배송</button></li>
-    <li><button type="button" class="tab__link" role="tab" aria-selected="false">당일배송</button></li>
-    </ul>
+  <!-- 2. a 태그 + role 없음 -->
+  <ul class="tablist" aria-label="a 태그 + role 없음">
+    <li><a href="#none" class="tab-button" aria-selected="true">언론사 (role 없음)</a></li>
+    <li><a href="#none" class="tab-button" aria-selected="false">언론사 (role 없음)</a></li>
+  </ul>
 
-    <!-- 4. button 태그 + role 없음 -->
-    <ul aria-label="button 태그 + role 없음">
-    <li><button type="button" class="tab__link" aria-selected="true">당일배송 (role 없음)</button></li>
-    <li><button type="button" class="tab__link" aria-selected="false">당일배송 (role 없음)</button></li>
-    </ul>
+  <!-- 3. button 태그 + role="tab" -->
+  <ul class="tablist" role="tablist" aria-label="button 태그 + role 포함">
+    <li><button type="button" class="tab-button" role="tab" aria-selected="true">당일배송</button></li>
+    <li><button type="button" class="tab-button" role="tab" aria-selected="false">당일배송</button></li>
+  </ul>
 
-    <script>
+  <!-- 4. button 태그 + role 없음 -->
+  <ul class="tablist" aria-label="button 태그 + role 없음">
+    <li><button type="button" class="tab-button" aria-selected="true">당일배송 (role 없음)</button></li>
+    <li><button type="button" class="tab-button" aria-selected="false">당일배송 (role 없음)</button></li>
+  </ul>
+
+  <script>
     document.querySelectorAll('ul').forEach(tabGroup => {
-        tabGroup.addEventListener('click', function (e) {
+      tabGroup.addEventListener('click', function (e) {
         const target = e.target.closest('[aria-selected]');
         if (!target) return;
 
-        // 그룹 내의 모든 요소 aria-selected false로
         tabGroup.querySelectorAll('[aria-selected]').forEach(el => {
-            el.setAttribute('aria-selected', 'false');
+          el.setAttribute('aria-selected', 'false');
         });
 
-        // 클릭한 요소만 true로
         target.setAttribute('aria-selected', 'true');
-        });
+      });
     });
-    </script>
+  </script>
 
 </body>
 </html>
